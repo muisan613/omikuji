@@ -2,13 +2,14 @@ name: Build & Release Zips
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*'        # v1.1.2 などのタグ push で起動
+  workflow_dispatch:  # 手動実行も可（Actions 画面から Run）
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write   # Release 作成・アセット添付に必要
 
     steps:
       - name: Checkout
@@ -18,15 +19,24 @@ jobs:
         run: |
           set -eux
           mkdir -p dist
+
+          # Free（存在する場合のみZIP化）
           if [ -d "plugins/wp-omikuji-stripe" ]; then
             (cd plugins && zip -r ../dist/wp-omikuji-stripe-${GITHUB_REF_NAME}.zip wp-omikuji-stripe)
+          else
+            echo "Free plugin not found (plugins/wp-omikuji-stripe). Skipping."
           fi
+
+          # Pro（存在する場合のみZIP化）
           if [ -d "plugins/wp-omikuji-stripe-pro" ]; then
             (cd plugins && zip -r ../dist/wp-omikuji-stripe-pro-${GITHUB_REF_NAME}.zip wp-omikuji-stripe-pro)
+          else
+            echo "Pro plugin not found (plugins/wp-omikuji-stripe-pro). Skipping."
           fi
-          ls -lh dist
 
-      - name: Create or update GitHub Release
+          ls -lh dist || true
+
+      - name: Create / Update Release and upload assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
