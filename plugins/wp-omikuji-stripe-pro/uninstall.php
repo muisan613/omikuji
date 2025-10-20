@@ -1,1 +1,0 @@
-<?php // uninstall handled by class method ?>
