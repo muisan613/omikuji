@@ -14,13 +14,11 @@ class Plugin {
     wp_enqueue_script('stripe-js','https://js.stripe.com/v3/',[],null,true);
     wp_enqueue_style('omikuji-pro-css', OMIKUJI_PRO_URL.'assets/css/omikuji.css',[], OMIKUJI_PRO_VERSION);
     wp_enqueue_script('omikuji-pro-js', OMIKUJI_PRO_URL.'assets/js/omikuji-pro.js', ['jquery','stripe-js'], OMIKUJI_PRO_VERSION, true);
-    $results_json = get_option('omikuji_pro_results_json','[]');
     wp_localize_script('omikuji-pro-js','OMIKUJI_PRO_VARS',[
       'restUrl' => esc_url_raw( rest_url('omikuji-pro/v1') ),
       'nonce'   => wp_create_nonce('wp_rest'),
       'successPage' => get_permalink( (int) get_option('omikuji_pro_success_page_id') ),
       'publishable' => get_option('omikuji_pro_pub_key',''),
-      'results' => $results_json,
     ]);
   }
   public function shortcode_draw(){ ob_start(); include OMIKUJI_PRO_DIR.'templates/omikuji-button.php'; return ob_get_clean(); }

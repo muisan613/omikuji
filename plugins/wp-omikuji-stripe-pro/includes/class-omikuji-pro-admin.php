@@ -18,7 +18,6 @@ class Admin {
     register_setting('omikuji_pro_group','omikuji_pro_price_amount');
     register_setting('omikuji_pro_group','omikuji_pro_currency');
     register_setting('omikuji_pro_group','omikuji_pro_success_page_id');
-    register_setting('omikuji_pro_group','omikuji_pro_results_json');
   }
   public function render(){ ?>
   <div class="wrap">
@@ -31,9 +30,9 @@ class Admin {
         <tr><th>価格（最小単位）</th><td><input type="number" name="omikuji_pro_price_amount" value="<?php echo esc_attr(get_option('omikuji_pro_price_amount','200')); ?>" class="small-text"> <span class="description">JPY は 50 以上の整数</span></td></tr>
         <tr><th>通貨</th><td><input type="text" name="omikuji_pro_currency" value="<?php echo esc_attr(get_option('omikuji_pro_currency','jpy')); ?>" class="small-text"></td></tr>
         <tr><th>成功ページ（[omikuji_result]）</th><td><?php wp_dropdown_pages(['name'=>'omikuji_pro_success_page_id','selected'=>(int)get_option('omikuji_pro_success_page_id'),'show_option_none'=>'— 選択 —']); ?></td></tr>
-        <tr><th>結果と重み（JSON）</th><td><textarea name="omikuji_pro_results_json" rows="8" class="large-text code"><?php echo esc_textarea(get_option('omikuji_pro_results_json','[]')); ?></textarea></td></tr>
       </table>
       <?php submit_button(); ?>
+      <p class="description">※ 結果データはDB（wp_omikuji_results）で管理します。次フェーズで管理UIを提供します。</p>
     </form>
   </div>
   <?php }

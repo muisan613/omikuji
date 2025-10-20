@@ -8,27 +8,21 @@ class Rest {
   private function __construct(){ add_action('rest_api_init',[ $this,'routes' ]); }
 
   public function routes(){
-    register_rest_route(
-      'omikuji-pro/v1',
-      '/create-session',
-      [
-        'methods'  => 'POST',
-        'callback' => [ $this, 'create_session' ],
-        'permission_callback' => function($req){ return wp_verify_nonce( $req->get_header('x-wp-nonce'), 'wp_rest'); }
-      ]
-    );
-    register_rest_route(
-      'omikuji-pro/v1',
-      '/finalize',
-      [
-        'methods'  => 'POST',
-        'callback' => [ $this, 'finalize' ],
-        'permission_callback' => function($req){ return wp_verify_nonce( $req->get_header('x-wp-nonce'), 'wp_rest'); }
-      ]
-    );
+    register_rest_route('omikuji-pro/v1','/create-session',[
+      'methods'=>'POST',
+      'callback'=>[ $this,'create_session' ],
+      'permission_callback' => '__return_true'
+    ]);
+    register_rest_route('omikuji-pro/v1','/finalize',[
+      'methods'=>'POST',
+      'callback'=>[ $this,'finalize' ],
+      'permission_callback' => '__return_true'
+    ]);
   }
 
   private function results_conf(){
+    $rows = ResultRepository::all_active();
+    if (is_array($rows) && count($rows)>0) return $rows;
     $json = get_option('omikuji_pro_results_json','[]');
     $arr = json_decode($json,true);
     return is_array($arr) ? $arr : [];
