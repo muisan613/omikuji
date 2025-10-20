@@ -1,16 +1,13 @@
 (function($){
   $(document).on('click','#omikuji-draw', async function(){
-    const publishable = $(this).data('publishable');
+    const publishable=$(this).data('publishable');
     if(!publishable){ alert('Stripe Publishable Keyが未設定です'); return; }
     try{
-      const res = await fetch( OMIKUJI_VARS.restUrl + '/create-session', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({})
-      });
-      if(!res.ok){ const t=await res.text(); alert('通信エラー: '+res.status+'\n'+t.substring(0,200)); return; }
-      const data = await res.json(); if(!data.id) throw new Error('Checkoutセッション作成に失敗');
-      const stripe = Stripe(publishable); const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
-      if(error) alert(error.message);
-    }catch(e){ console.error(e); alert('通信エラー: '+(e && e.message ? e.message : 'unknown')); }
+      const res=await fetch(OMIKUJI_VARS.restUrl+'/create-session',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({}) });
+      if(!res.ok){ const t=await res.text(); alert('通信エラー: '+res.status+'\n'+t.substring(0,280)); return; }
+      const data=await res.json(); const stripe=Stripe(publishable);
+      const {error}=await stripe.redirectToCheckout({ sessionId:data.id }); if(error) alert(error.message);
+    }catch(e){ alert('通信エラー: '+(e&&e.message?e.message:'unknown')); }
   });
   $(function(){
     if(typeof window.OMIKUJI_SESSION_ID==='undefined') return;
