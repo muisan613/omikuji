@@ -1,1 +1,15 @@
+<<<<<<< HEAD
 .DS_Store\nnode_modules/\nvendor/\nwp-content/debug.log\n.DS_Store
+=======
+#ignore all zips by default
+*.zip
+# but keep release zips under dist/
+!dist/*.zip
+
+# node/php caches etc（必要に応じて）
+vendor/
+node_modules/
+.DS_Store
+wp-content/debug.log
+
+>>>>>>> 4965548 (feat(pro): v1.3.3 full build (draw shortcode fix, video ended→fade→result))
